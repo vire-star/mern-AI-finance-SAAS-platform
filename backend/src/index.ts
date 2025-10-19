@@ -1,6 +1,5 @@
 import "dotenv/config";
 import "./config/passport.config";
-import path from 'path'
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import passport from "passport";
@@ -23,7 +22,6 @@ import authRoutes from "./routes/auth.route";
 const app = express();
 const BASE_PATH = Env.BASE_PATH;
 
-const _dirname = path.resolve()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,6 +45,7 @@ app.get(
 );
 
 
+
 // console.log(BASE_PATH)
 // console.log(`✅ Mounted at /${BASE_PATH}/auth`);
 app.use(`/${BASE_PATH}/auth`, authRoutes);
@@ -57,11 +56,6 @@ app.use(`/${BASE_PATH}/report`, passportAuthenticateJwt, reportRoutes);
 app.use(`/${BASE_PATH}/analytics`, passportAuthenticateJwt, analyticsRoutes);
 
 app.use(errorHandler);
-
-app.use(express.static(path.join(_dirname,"/client/dist")));
-app.use((req, res) => {
-  res.sendFile(path.resolve(_dirname, "client", "dist", "index.html"));
-});
 
 app.listen(Env.PORT, async () => {
   await connctDatabase();
